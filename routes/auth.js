@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { body } = require("express-validator");
 
-const { login, signup } = require("../controllers/auth");
+const { login, signup, logout } = require("../controllers/auth");
 
 router
   .post(
@@ -27,6 +27,8 @@ router
       .escape()
       .isLength({ min: 6, max: 20 }),
     login
-  );
+  )
+
+  .get("/logout", logout);
 
 module.exports = router;

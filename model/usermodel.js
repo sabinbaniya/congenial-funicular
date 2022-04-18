@@ -38,7 +38,7 @@ userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-userSchema.methods.generateCookie = function (user) {
+userSchema.methods.generateCookie = function () {
   const token = jwt.sign({ name: this.name }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
@@ -48,6 +48,7 @@ userSchema.methods.generateCookie = function (user) {
     sameSite: "strict",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
+    secure: true,
   });
 
   return serializedCookie;
