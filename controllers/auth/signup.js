@@ -1,7 +1,4 @@
 const { validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
-const { serialize } = require("cookie");
-require("dotenv").config();
 
 const UserModel = require("../../model/usermodel");
 
@@ -14,23 +11,19 @@ const signup = async (req, res) => {
   }
 
   try {
+    let alreadyExists = await UserModel.findOne({ email });
+
+    if (alreadyExists) {
+      throw new Error("User with given email already exists");
+    }
+
     const user = await UserModel.create({
       name,
       email,
       password,
     });
 
-    const token = jwt.sign(
-      { id: user._id, name: user.name },
-      process.env.JWT_SECRET,
-      { expiresIn: "30d" }
-    );
-
-    const serializedCookie = serialize("access", token, {
-      httpOnly: true,
-      sameSite: "strict",
-    });
-
+    const serializedCookie = await user.generateCookie();
     res.setHeader("Set-Cookie", serializedCookie);
     return res.status(201).json({ msg: "User registration successful" });
   } catch (error) {

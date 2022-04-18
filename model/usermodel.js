@@ -1,4 +1,8 @@
 const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { serialize } = require("cookie");
+require("dotenv").config();
 
 const userSchema = new Schema(
   {
@@ -28,6 +32,31 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", async function () {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+userSchema.methods.generateCookie = function (user) {
+  const token = jwt.sign({ name: this.name }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+
+  const serializedCookie = serialize("access", token, {
+    httpOnly: true,
+    sameSite: "strict",
+    path: "/",
+  });
+
+  return serializedCookie;
+};
+
+userSchema.methods.comparePasswords = async function (password) {
+  const doPasswordsMatch = await bcrypt.compare(password, this.password);
+
+  return doPasswordsMatch;
+};
 
 const UserModel = model("Users", userSchema);
 
