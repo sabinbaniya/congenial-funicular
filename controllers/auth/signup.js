@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const { v4 } = require("uuid");
 
 const UserModel = require("../../model/usermodel");
 
@@ -13,11 +14,14 @@ const signup = async (req, res) => {
   try {
     let alreadyExists = await UserModel.findOne({ email });
 
+    const userId = v4();
+
     if (alreadyExists) {
       throw new Error("User with given email already exists");
     }
 
     const user = await UserModel.create({
+      userId,
       name,
       email,
       password,

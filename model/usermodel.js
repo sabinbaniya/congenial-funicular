@@ -6,6 +6,9 @@ require("dotenv").config();
 
 const userSchema = new Schema(
   {
+    userId: {
+      type: String,
+    },
     name: {
       type: String,
       required: true,
@@ -26,6 +29,24 @@ const userSchema = new Schema(
     avatarUrl: {
       type: String,
       required: false,
+      default: "/avatar.png",
+    },
+    friends: {
+      type: [
+        {
+          friends: String,
+          chatRoomId: String,
+          messageCollectionId: String,
+        },
+      ],
+    },
+    onlineStatus: {
+      type: Boolean,
+      default: true,
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {
