@@ -7,6 +7,7 @@ const app = express();
 const server = http.createServer(app);
 
 const authRouter = require("./routes/auth");
+const chatRouter = require("./routes/chat");
 const connectDB = require("./db");
 
 app.use(
@@ -19,6 +20,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use("/api/chat", chatRouter);
 
 app.get("/", (req, res) => {
   res.send("All good");

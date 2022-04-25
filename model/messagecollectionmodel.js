@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const MessageModel = require("./messagesmodel");
 
 const MessageCollectionSchema = new mongoose.Schema({
-  id: {
+  messageCollectionId: {
     type: String,
     required: true,
   },

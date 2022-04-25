@@ -35,7 +35,7 @@ const userSchema = new Schema(
     friends: {
       type: [
         {
-          friends: String,
+          userId: String,
           chatRoomId: String,
           messageCollectionId: String,
         },
@@ -61,9 +61,13 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.generateCookie = function () {
-  const token = jwt.sign({ name: this.name }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
-  });
+  const token = jwt.sign(
+    { name: this.name, userId: this.userId },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "30d",
+    }
+  );
 
   const serializedCookie = serialize("access", token, {
     httpOnly: true,
