@@ -6,7 +6,7 @@ const MessageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    recieverChatroomId: {
+    chatroomId: {
       type: String,
       required: true,
     },
