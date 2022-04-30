@@ -1,7 +1,10 @@
 const router = require("express").Router();
 
-const { search, addFriend } = require("../controllers/chat");
+const { search, addFriend, getAllFriends } = require("../controllers/chat");
 
-router.post("/search", search).post("/add", addFriend);
+router
+  .post("/search", search)
+  .post("/add", addFriend)
+  .get("/getAllFriends", getAllFriends);
 
 module.exports = router;
