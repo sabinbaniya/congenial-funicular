@@ -8,8 +8,10 @@ const getAllFriends = async (req, res) => {
 
   const user = await UserModel.findOne({ userId });
 
-  const friendList = await Promise.all(
-    user.friends.map(async (friend) => {
+  const chatRooms = user.friends;
+
+  let friendList = await Promise.all(
+    user.friends.map(async (friend, ind) => {
       return await UserModel.findOne({ userId: friend.userId }).select({
         _id: 0,
         avatarUrl: 1,
@@ -21,9 +23,16 @@ const getAllFriends = async (req, res) => {
     })
   );
 
+  friendList = friendList.map((friend, ind) => {
+    return {
+      ...friend,
+      chatRoomId: chatRooms[ind].chatRoomId,
+    };
+  });
+
   console.log(friendList);
 
-  res.send(friendList);
+  res.status(200).json(friendList);
 };
 
 module.exports = getAllFriends;
