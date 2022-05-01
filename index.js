@@ -9,6 +9,7 @@ const server = http.createServer(app);
 const authRouter = require("./routes/auth");
 const chatRouter = require("./routes/chat");
 const connectDB = require("./db");
+const MessageModel = require("./model/messagesmodel");
 
 app.use(
   cors({
@@ -30,6 +31,30 @@ const io = new socketIo.Server(server, {
   cors: {
     origin: "http://localhost:3000",
   },
+  cookie: true,
+});
+
+io.on("connection", (socket) => {
+  console.log(socket);
+  socket.on("join_room", (data) => {
+    console.log(data);
+    socket.join(data);
+  });
+
+  socket.on("send_message", async (data) => {
+    console.log(data);
+
+    const message = {
+      author: data.author,
+      chatRoomId: data.chatRoomId,
+      msg: data.msg,
+    };
+
+    const res = await MessageModel.create(message);
+    console.log(res);
+
+    socket.emit("get_message", data.msg);
+  });
 });
 
 const port = process.env.PORT || 5000;
