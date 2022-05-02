@@ -43,21 +43,21 @@ io.on("connection", (socket) => {
 
   socket.on("send_message", async (data) => {
     try {
-      const res1 = await UserModel.findOne({ userId: data.author });
       const message = {
         author: data.author,
-        author_name: res1.name,
+        author_name: data.author_name,
         chatRoomId: data.chatRoomId,
         msg: data.msg,
+        createdAt: Date.now(),
       };
 
       const res = await MessageModel.create(message);
-      const res2 = await MessageCollectionModel.findOneAndUpdate(
+      await MessageCollectionModel.findOneAndUpdate(
         { roomId: message.chatRoomId },
         { $push: { messageId: res._id } }
       );
 
-      socket.emit("get_message", data.msg);
+      io.in(data.chatRoomId).emit("get_message", message);
     } catch (error) {
       console.log(error);
     }

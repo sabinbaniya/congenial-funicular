@@ -2,6 +2,12 @@ const MessageCollectionModel = require("../../model/messagecollectionmodel");
 
 const getAllMessages = async (req, res) => {
   const { chatRoomId } = req.params;
+  let { skip } = req.query;
+  if (!skip) {
+    skip = 0;
+  }
+  const limit = 10;
+  console.log(req.query);
 
   try {
     const messages = await MessageCollectionModel.findOne(
@@ -9,16 +15,31 @@ const getAllMessages = async (req, res) => {
         roomId: chatRoomId,
       },
       { _id: 0, messageCollectionId: 1, roomId: 1, messageId: 1 }
-    ).populate("messageId", {
-      _id: 0,
-      author: 1,
-      chatRoomId: 1,
-      msg: 1,
-      createdAt: 1,
+    ).populate({
+      path: "messageId",
+      select: "author author_name chatRoomId msg createdAt",
+      options: {
+        limit,
+        sort: { createdAt: -1 },
+        skip: limit * skip,
+      },
     });
 
-    console.log(messages);
-    res.send(messages);
+    const lengths = await MessageCollectionModel.aggregate([
+      {
+        $match: { roomId: chatRoomId },
+      },
+      {
+        $project: { NumberOfMessages: { $size: "$messageId" } },
+      },
+    ]);
+
+    const data = {
+      messages: messages._doc,
+      noOfMessages: lengths[0].NumberOfMessages,
+    };
+
+    res.status(200).send(data);
   } catch (error) {
     console.log(error);
   }

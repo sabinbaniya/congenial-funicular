@@ -32,12 +32,12 @@ const getAllFriends = async (req, res) => {
 
   friendList = friendList.map((friend, ind) => {
     return {
-      ...friend,
+      friend: friend._doc,
       chatRoomId: chatRooms[ind].chatRoomId,
     };
   });
 
-  res.status(200).json(friendList);
+  res.status(200).send(friendList);
 };
 
 module.exports = getAllFriends;
