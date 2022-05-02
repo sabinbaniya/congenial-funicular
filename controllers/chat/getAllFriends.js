@@ -3,8 +3,15 @@ const UserModel = require("../../model/usermodel");
 require("dotenv").config();
 
 const getAllFriends = async (req, res) => {
-  const access = req.headers.cookie.split("=")[1];
-  const { userId } = jwt.decode(access, process.env.JWT_SECRET);
+  let access = req.headers.cookie.split("=")[1];
+  access = access.split(";")[0];
+  let userId;
+  try {
+    userId = jwt.decode(access).userId;
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ msg: "Bad Request" });
+  }
 
   const user = await UserModel.findOne({ userId });
 
@@ -29,8 +36,6 @@ const getAllFriends = async (req, res) => {
       chatRoomId: chatRooms[ind].chatRoomId,
     };
   });
-
-  console.log(friendList);
 
   res.status(200).json(friendList);
 };

@@ -10,6 +10,8 @@ const authRouter = require("./routes/auth");
 const chatRouter = require("./routes/chat");
 const connectDB = require("./db");
 const MessageModel = require("./model/messagesmodel");
+const MessageCollectionModel = require("./model/messagecollectionmodel");
+const UserModel = require("./model/usermodel");
 
 app.use(
   cors({
@@ -35,25 +37,30 @@ const io = new socketIo.Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log(socket);
   socket.on("join_room", (data) => {
-    console.log(data);
     socket.join(data);
   });
 
   socket.on("send_message", async (data) => {
-    console.log(data);
+    try {
+      const res1 = await UserModel.findOne({ userId: data.author });
+      const message = {
+        author: data.author,
+        author_name: res1.name,
+        chatRoomId: data.chatRoomId,
+        msg: data.msg,
+      };
 
-    const message = {
-      author: data.author,
-      chatRoomId: data.chatRoomId,
-      msg: data.msg,
-    };
+      const res = await MessageModel.create(message);
+      const res2 = await MessageCollectionModel.findOneAndUpdate(
+        { roomId: message.chatRoomId },
+        { $push: { messageId: res._id } }
+      );
 
-    const res = await MessageModel.create(message);
-    console.log(res);
-
-    socket.emit("get_message", data.msg);
+      socket.emit("get_message", data.msg);
+    } catch (error) {
+      console.log(error);
+    }
   });
 });
 
