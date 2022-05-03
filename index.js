@@ -8,10 +8,10 @@ const server = http.createServer(app);
 
 const authRouter = require("./routes/auth");
 const chatRouter = require("./routes/chat");
+const userRouter = require("./routes/user");
 const connectDB = require("./db");
 const MessageModel = require("./model/messagesmodel");
 const MessageCollectionModel = require("./model/messagecollectionmodel");
-const UserModel = require("./model/usermodel");
 
 app.use(
   cors({
@@ -24,6 +24,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 app.use("/api/chat", chatRouter);
+app.use("/api/user", userRouter);
 
 app.get("/", (req, res) => {
   res.send("All good");

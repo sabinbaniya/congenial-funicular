@@ -36,6 +36,10 @@ const userSchema = new Schema(
       type: [
         {
           userId: String,
+          name: String,
+          email: String,
+          avatarUrl: String,
+          joinedAt: Date,
           chatRoomId: String,
           messageCollectionId: String,
         },

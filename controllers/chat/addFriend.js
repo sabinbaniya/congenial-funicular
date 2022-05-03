@@ -1,5 +1,6 @@
 const UserModel = require("../../model/usermodel");
 const jwt = require("jsonwebtoken");
+const { parse } = require("cookie");
 const { v4 } = require("uuid");
 const MessageCollectionModel = require("../../model/messagecollectionmodel");
 
@@ -7,7 +8,7 @@ require("dotenv").config();
 
 const addFriend = async (req, res) => {
   const { user } = req.body;
-  const access = req.headers.cookie.split("=")[1];
+  const { access } = parse(req.headers.cookie);
 
   try {
     const found = await UserModel.findOne({ userId: user });
@@ -17,6 +18,23 @@ const addFriend = async (req, res) => {
 
     if (!found || !clientUser) {
       return res.status(400).json({ msg: "Couldn't find user" });
+    }
+
+    const foundsFriendList = found.friends;
+    const clientUsersFriendList = clientUser.friends;
+
+    console.log(foundsFriendList, clientUsersFriendList);
+
+    const areAlreadyFriends = foundsFriendList.some((e, indx) => {
+      if (e.userId === clientUsersFriendList[indx].userId) {
+        return true;
+      }
+
+      return false;
+    });
+
+    if (areAlreadyFriends) {
+      return res.status(200).json({ msg: "The users are already friends" });
     }
 
     const chatRoomId = v4();
@@ -29,13 +47,23 @@ const addFriend = async (req, res) => {
     });
 
     const obj = {
+      _id: found._id,
       userId: found.userId,
+      name: found.name,
+      email: found.email,
+      avatarUrl: found.avatarUrl,
+      joinedAt: found.createdAt,
       chatRoomId,
       messageCollectionId,
     };
 
     const obj2 = {
+      _id: clientUser._id,
       userId: clientUser.userId,
+      name: clientUser.name,
+      email: clientUser.email,
+      avatarUrl: clientUser.avatarUrl,
+      joinedAt: clientUser.createdAt,
       chatRoomId,
       messageCollectionId,
     };

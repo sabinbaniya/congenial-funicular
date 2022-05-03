@@ -25,6 +25,8 @@ const getAllMessages = async (req, res) => {
       },
     });
 
+    console.log(messages);
+
     const lengths = await MessageCollectionModel.aggregate([
       {
         $match: { roomId: chatRoomId },
@@ -34,11 +36,17 @@ const getAllMessages = async (req, res) => {
       },
     ]);
 
+    const noOfMessages =
+      lengths[0].NumberOfMessages - skip * limit > 0
+        ? lengths[0].NumberOfMessages - skip * limit
+        : 0;
+
     const data = {
       messages: messages._doc,
-      noOfMessages: lengths[0].NumberOfMessages,
+      noOfMessages,
     };
 
+    console.log(data);
     res.status(200).send(data);
   } catch (error) {
     console.log(error);
