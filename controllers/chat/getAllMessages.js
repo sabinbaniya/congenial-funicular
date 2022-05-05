@@ -2,12 +2,8 @@ const MessageCollectionModel = require("../../model/messagecollectionmodel");
 
 const getAllMessages = async (req, res) => {
   const { chatRoomId } = req.params;
-  let { skip } = req.query;
-  if (!skip) {
-    skip = 0;
-  }
-  const limit = 10;
-  console.log(req.query);
+  let { skip } = req.query || 0;
+  const limit = 50;
 
   try {
     const messages = await MessageCollectionModel.findOne(
@@ -18,30 +14,30 @@ const getAllMessages = async (req, res) => {
     ).populate({
       path: "messageId",
       select: "author author_name chatRoomId msg createdAt",
-      // options: {
-      //   limit,
-      //   sort: { createdAt: -1 },
-      //   skip: limit * skip,
-      // },
+      options: {
+        limit,
+        sort: { createdAt: -1 },
+        skip: limit * skip,
+      },
     });
 
-    const lengths = await MessageCollectionModel.aggregate([
-      {
-        $match: { roomId: chatRoomId },
-      },
-      {
-        $project: { NumberOfMessages: { $size: "$messageId" } },
-      },
-    ]);
+    // const lengths = await MessageCollectionModel.aggregate([
+    //   {
+    //     $match: { roomId: chatRoomId },
+    //   },
+    //   {
+    //     $project: { NumberOfMessages: { $size: "$messageId" } },
+    //   },
+    // ]);
 
-    const noOfMessages =
-      lengths[0].NumberOfMessages - skip * limit >= 0
-        ? lengths[0].NumberOfMessages - skip * limit
-        : 0;
+    // const noOfMessages =
+    //   lengths[0].NumberOfMessages - skip * limit >= 0
+    //     ? lengths[0].NumberOfMessages - skip * limit
+    //     : 0;
 
     const data = {
       messages: messages._doc,
-      noOfMessages,
+      // noOfMessages,
     };
 
     console.log(data);
