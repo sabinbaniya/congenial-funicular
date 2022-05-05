@@ -18,14 +18,12 @@ const getAllMessages = async (req, res) => {
     ).populate({
       path: "messageId",
       select: "author author_name chatRoomId msg createdAt",
-      options: {
-        limit,
-        sort: { createdAt: -1 },
-        skip: limit * skip,
-      },
+      // options: {
+      //   limit,
+      //   sort: { createdAt: -1 },
+      //   skip: limit * skip,
+      // },
     });
-
-    console.log(messages);
 
     const lengths = await MessageCollectionModel.aggregate([
       {
@@ -37,7 +35,7 @@ const getAllMessages = async (req, res) => {
     ]);
 
     const noOfMessages =
-      lengths[0].NumberOfMessages - skip * limit > 0
+      lengths[0].NumberOfMessages - skip * limit >= 0
         ? lengths[0].NumberOfMessages - skip * limit
         : 0;
 

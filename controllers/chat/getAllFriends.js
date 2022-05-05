@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
 const UserModel = require("../../model/usermodel");
+const { parse } = require("cookie");
 require("dotenv").config();
 
 const getAllFriends = async (req, res) => {
-  let access = req.headers.cookie.split("=")[1];
-  access = access.split(";")[0];
+  let { access } = parse(req.headers.cookie);
   try {
-    const userId = jwt.decode(access).userId;
+    const { userId } = jwt.decode(access);
 
     const user = await UserModel.findOne({ userId });
 

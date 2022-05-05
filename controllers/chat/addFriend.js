@@ -21,12 +21,9 @@ const addFriend = async (req, res) => {
     }
 
     const foundsFriendList = found.friends;
-    const clientUsersFriendList = clientUser.friends;
-
-    console.log(foundsFriendList, clientUsersFriendList);
 
     const areAlreadyFriends = foundsFriendList.some((e, indx) => {
-      if (e.userId === clientUsersFriendList[indx].userId) {
+      if (e.userId === clientUser.userId) {
         return true;
       }
 
