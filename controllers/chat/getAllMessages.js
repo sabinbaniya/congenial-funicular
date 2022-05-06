@@ -40,7 +40,6 @@ const getAllMessages = async (req, res) => {
       // noOfMessages,
     };
 
-    console.log(data);
     res.status(200).send(data);
   } catch (error) {
     console.log(error);
