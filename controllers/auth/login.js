@@ -6,10 +6,14 @@ const login = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email });
 
+    if (!user) {
+      return res.status(401).json({ msg: "Invalid Credentials" });
+    }
+
     const doPasswordsMatch = await user.comparePasswords(password);
 
     if (!doPasswordsMatch) {
-      return res.status(400).json({ msg: "Invalid Credentials" });
+      return res.status(401).json({ msg: "Invalid Credentials" });
     }
 
     const serializedCookie = await user.generateCookie();

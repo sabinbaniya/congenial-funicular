@@ -3,7 +3,7 @@ const MessageCollectionModel = require("../../model/messagecollectionmodel");
 const getAllMessages = async (req, res) => {
   const { chatRoomId } = req.params;
   let { skip } = req.query || 0;
-  const limit = 50;
+  const limit = 15;
 
   try {
     const messages = await MessageCollectionModel.findOne(

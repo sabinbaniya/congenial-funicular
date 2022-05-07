@@ -17,7 +17,7 @@ const signup = async (req, res) => {
     const userId = v4();
 
     if (alreadyExists) {
-      throw new Error("User with given email already exists");
+      return res.status(400).json({ msg: "User registeration failed" });
     }
 
     const user = await UserModel.create({
