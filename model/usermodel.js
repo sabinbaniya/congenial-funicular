@@ -47,11 +47,15 @@ const userSchema = new Schema(
     },
     onlineStatus: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    emailVerificationToken: {
+      type: String,
+      required: true,
     },
   },
   {

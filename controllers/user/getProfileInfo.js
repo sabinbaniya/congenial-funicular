@@ -20,7 +20,6 @@ const getProfileInfo = async (req, res) => {
         createdAt: 1,
       }
     );
-    console.log(resu);
     return res.status(200).send(resu);
   } catch (error) {
     console.log(error);

@@ -1,7 +1,13 @@
 const UserModel = require("../../model/usermodel");
+const { validationResult } = require("express-validator");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ msg: "Invalid data provided" });
+  }
 
   try {
     const user = await UserModel.findOne({ email });

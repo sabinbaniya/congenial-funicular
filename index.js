@@ -12,6 +12,8 @@ const userRouter = require("./routes/user");
 const connectDB = require("./db");
 const MessageModel = require("./model/messagesmodel");
 const MessageCollectionModel = require("./model/messagecollectionmodel");
+const authChecker = require("./middlewares/authchecker");
+const UserModel = require("./model/usermodel");
 
 app.use(
   cors({
@@ -23,6 +25,8 @@ app.use(
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use(authChecker);
+
 app.use("/api/chat", chatRouter);
 app.use("/api/user", userRouter);
 
@@ -62,6 +66,22 @@ io.on("connection", (socket) => {
     } catch (error) {
       console.log(error);
     }
+  });
+
+  socket.on("set_online", async ({ status, userId }) => {
+    try {
+      const user = await UserModel.findOneAndUpdate(
+        { userId },
+        { onlineStatus: status }
+      );
+      console.log(status);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on("disconnect", (data) => {
+    console.log(data);
   });
 });
 

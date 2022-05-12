@@ -13,7 +13,7 @@ const getAllMessages = async (req, res) => {
       { _id: 0, messageCollectionId: 1, roomId: 1, messageId: 1 }
     ).populate({
       path: "messageId",
-      select: "author author_name chatRoomId msg createdAt",
+      select: "_id author author_name chatRoomId msg createdAt",
       options: {
         limit,
         sort: { createdAt: -1 },

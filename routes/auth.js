@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { body } = require("express-validator");
 
-const { login, signup, logout } = require("../controllers/auth");
+const { login, signup, logout, verifyEmail } = require("../controllers/auth");
 
 router
   .post(
@@ -29,6 +29,16 @@ router
     login
   )
 
-  .get("/logout", logout);
+  .get("/logout", logout)
+  .post(
+    "/verifyemail",
+    body("verificationCode")
+      .not()
+      .isEmpty()
+      .trim()
+      .escape()
+      .isLength({ max: 40 }),
+    verifyEmail
+  );
 
 module.exports = router;

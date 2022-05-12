@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const { v4 } = require("uuid");
+const sendMail = require("../../helpers/sendMail");
 
 const UserModel = require("../../model/usermodel");
 
@@ -15,6 +16,7 @@ const signup = async (req, res) => {
     let alreadyExists = await UserModel.findOne({ email });
 
     const userId = v4();
+    const emailVerificationToken = v4();
 
     if (alreadyExists) {
       return res.status(400).json({ msg: "User registeration failed" });
@@ -25,11 +27,14 @@ const signup = async (req, res) => {
       name,
       email,
       password,
+      emailVerificationToken,
     });
 
-    const serializedCookie = await user.generateCookie();
-    res.setHeader("Set-Cookie", serializedCookie);
-    return res.status(201).json({ msg: "User registration successful" });
+    const mailSent = sendMail(email, emailVerificationToken);
+
+    if (mailSent) {
+      return res.status(201).json({ msg: "User registration successful" });
+    }
   } catch (error) {
     console.log(error);
     return res
