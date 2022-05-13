@@ -25,10 +25,9 @@ app.use(
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
-app.use(authChecker);
 
-app.use("/api/chat", chatRouter);
-app.use("/api/user", userRouter);
+app.use("/api/chat", authChecker, chatRouter);
+app.use("/api/user", authChecker, userRouter);
 
 app.get("/", (req, res) => {
   res.send("All good");
@@ -74,14 +73,14 @@ io.on("connection", (socket) => {
         { userId },
         { onlineStatus: status }
       );
-      console.log(status);
+      // console.log(status);
     } catch (error) {
       console.log(error);
     }
   });
 
   socket.on("disconnect", (data) => {
-    console.log(data);
+    // console.log(data);
   });
 });
 

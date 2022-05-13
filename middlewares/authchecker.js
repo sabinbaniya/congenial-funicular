@@ -11,7 +11,7 @@ const authChecker = (req, res, next) => {
     if (!access) {
       return res.status(401).json({ msg: "Unauthorised req" });
     }
-    const decoded = jwt.verify(access, process.env.JWT_SECRET);
+    jwt.verify(access, process.env.JWT_SECRET);
 
     return next();
   } catch (error) {
