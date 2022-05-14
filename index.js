@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
         { $push: { messageId: res._id } }
       );
 
-      io.in(data.chatRoomId).emit("get_message", message);
+      io.to(data.chatRoomId).emit("get_message", message);
     } catch (error) {
       console.log(error);
     }
