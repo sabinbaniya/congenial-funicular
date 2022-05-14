@@ -22,6 +22,10 @@ const login = async (req, res) => {
       return res.status(401).json({ msg: "Invalid Credentials" });
     }
 
+    if (!user.isEmailVerified) {
+      return res.status(401).json({ msg: "User hasn't verified email." });
+    }
+
     const serializedCookie = await user.generateCookie();
 
     res.setHeader("Set-Cookie", serializedCookie);
