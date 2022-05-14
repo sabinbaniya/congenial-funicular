@@ -13,21 +13,38 @@ const search = async (req, res) => {
   }
 
   try {
-    const users = await UserModel.find({ email });
+    const users = await UserModel.findOne({ email, isEmailVerified: true });
+    if (!users) {
+      return res.status(200).json({ msg: "No users found" });
+    }
     const { userId } = jwt.decode(access);
-    let areAlreadyFriends = users[0].friends.filter(
+    const self = await UserModel.findOne({ userId });
+
+    let areAlreadyFriends = users.friends.filter(
       (friend) => friend.userId === userId
     );
 
+    const isSelf = self.email === email;
+
+    const chatRoomId =
+      areAlreadyFriends.length !== 0 ? areAlreadyFriends[0].chatRoomId : null;
+
     const user = {
-      name: users[0].name,
-      avatarUrl: users[0].avatarUrl,
-      joinedAt: users[0].createdAt,
-      userId: users[0].userId,
+      name: users.name,
+      avatarUrl: users.avatarUrl,
+      joinedAt: users.createdAt,
+      userId: users.userId,
       areAlreadyFriends: areAlreadyFriends.length !== 0,
+      chatRoomId,
+      isSelf: false,
     };
 
-    res.json({ user });
+    if (isSelf) {
+      user.isSelf = true;
+      return res.status(200).json({ user });
+    }
+
+    res.status(200).json({ user });
   } catch (error) {
     console.log(error);
   }
