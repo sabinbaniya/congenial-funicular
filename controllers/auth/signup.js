@@ -1,7 +1,6 @@
 const { validationResult } = require("express-validator");
 const { v4 } = require("uuid");
 const sendMail = require("../../helpers/sendMail");
-
 const UserModel = require("../../model/usermodel");
 
 const signup = async (req, res) => {
@@ -30,7 +29,7 @@ const signup = async (req, res) => {
       emailVerificationToken,
     });
 
-    const mailSent = sendMail(email, emailVerificationToken);
+    const mailSent = await sendMail(email, emailVerificationToken);
 
     if (mailSent) {
       return res.status(201).json({ msg: "User registration successful" });
