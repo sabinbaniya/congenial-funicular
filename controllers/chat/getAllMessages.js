@@ -1,11 +1,25 @@
 const MessageCollectionModel = require("../../model/messagecollectionmodel");
+const { parse } = require("cookie");
+const jwt = require("jsonwebtoken");
+const UserModel = require("../../model/usermodel");
 
 const getAllMessages = async (req, res) => {
   const { chatRoomId } = req.params;
+  const { access } = parse(req.headers.cookie);
+  const { userId } = jwt.decode(access);
   let { skip } = req.query || 0;
-  const limit = 15;
+  const limit = 50;
 
   try {
+    const a = await UserModel.findOne({ userId }, { friends: 1 });
+    const hasPerms = a.friends.some(
+      (friend) => friend.chatRoomId === chatRoomId
+    );
+
+    if (!hasPerms) {
+      return res.status(400).json({ msg: "Unauthorized Access" });
+    }
+
     const messages = await MessageCollectionModel.findOne(
       {
         roomId: chatRoomId,
