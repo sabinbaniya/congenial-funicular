@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
         { userId },
         { onlineStatus: status }
       );
-      // console.log(status);
+      console.log(status);
     } catch (error) {
       console.log(error);
     }
