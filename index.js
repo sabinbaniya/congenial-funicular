@@ -2,6 +2,9 @@ const express = require("express");
 const socketIo = require("socket.io");
 const http = require("http");
 const cors = require("cors");
+const helmet = require("helmet");
+const rateLimiter = require("express-rate-limit");
+require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
@@ -15,14 +18,24 @@ const MessageCollectionModel = require("./model/messagecollectionmodel");
 const authChecker = require("./middlewares/authchecker");
 const UserModel = require("./model/usermodel");
 
+const URL = process.env.URL;
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: URL,
     credentials: true,
   })
 );
 
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+  })
+);
+
 app.use(express.json());
+app.use(helmet());
 
 app.use("/api/auth", authRouter);
 
@@ -35,7 +48,7 @@ app.get("/", (req, res) => {
 
 const io = new socketIo.Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: URL,
   },
   cookie: true,
 });
