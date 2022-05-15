@@ -5,8 +5,10 @@ const sendMail = async (to, token) => {
   try {
     let message = `
     <h1>Verify your email by clicking the link below:</h1>
-    <a href=http://localhost:3000/verify-email/${token}>Verify Email</a>
-    <p>This is a auto-generated email, please don't reply to this email.</p>
+    <hr/>
+    <a href=${process.env.URL}/verify-email/${token}>Verify Email</a>
+    <br/>
+    <small>This is a auto-generated email, please don't reply to this email.</small>
     `;
 
     let transporter = nodemailer.createTransport({

@@ -80,21 +80,21 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("set_online", async ({ status, userId }) => {
-    try {
-      const user = await UserModel.findOneAndUpdate(
-        { userId },
-        { onlineStatus: status }
-      );
-      console.log(status);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  // socket.on("set_online", async ({ status, userId }) => {
+  //   try {
+  //     const user = await UserModel.findOneAndUpdate(
+  //       { userId },
+  //       { onlineStatus: status }
+  //     );
+  //     console.log(status);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
 
-  socket.on("disconnect", (data) => {
-    // console.log(data);
-  });
+  // socket.on("disconnect", (data) => {
+  //   // console.log(data);
+  // });
 });
 
 const port = process.env.PORT || 5000;

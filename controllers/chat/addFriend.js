@@ -3,12 +3,18 @@ const jwt = require("jsonwebtoken");
 const { parse } = require("cookie");
 const { v4 } = require("uuid");
 const MessageCollectionModel = require("../../model/messagecollectionmodel");
+const { validationResult } = require("express-validator");
 
 require("dotenv").config();
 
 const addFriend = async (req, res) => {
   const { user } = req.body;
+  const errors = validationResult(req);
   const { access } = parse(req.headers.cookie);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ msg: "Bad Request" });
+  }
 
   try {
     const found = await UserModel.findOne({ userId: user });
