@@ -37,6 +37,7 @@ const getAllFriends = async (req, res) => {
         httpOnly: false,
         path: "/",
         sameSite: "none",
+        domain: process.env.URL,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
         secure: true,
       });
@@ -47,6 +48,7 @@ const getAllFriends = async (req, res) => {
         httpOnly: false,
         path: "/",
         sameSite: "none",
+        domain: process.env.URL,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
         secure: true,
       });
