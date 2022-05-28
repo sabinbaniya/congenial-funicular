@@ -35,20 +35,18 @@ const getAllFriends = async (req, res) => {
     if (!uid || uid === "null") {
       res.cookie("uid", userId, {
         httpOnly: false,
-        sameSite: "strict",
         path: "/",
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        secure: false,
+        secure: true,
       });
     }
 
     if (!uname || uname === "null") {
       res.cookie("uname", name, {
         httpOnly: false,
-        sameSite: "strict",
         path: "/",
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        secure: false,
+        secure: true,
       });
     }
 

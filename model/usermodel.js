@@ -79,10 +79,9 @@ userSchema.methods.generateCookie = function () {
 
   const serializedCookie = serialize("access", token, {
     httpOnly: true,
-    sameSite: "strict",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
-    secure: false,
+    secure: true,
   });
 
   return serializedCookie;
