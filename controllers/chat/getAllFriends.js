@@ -4,9 +4,9 @@ const { parse } = require("cookie");
 require("dotenv").config();
 
 const getAllFriends = async (req, res) => {
-  let { access } = parse(req.headers.cookie);
+  let { access, uid, uname } = parse(req.headers.cookie);
   try {
-    const { userId } = jwt.decode(access);
+    const { userId, name } = jwt.decode(access);
 
     const user = await UserModel.findOne({ userId });
 
@@ -31,6 +31,26 @@ const getAllFriends = async (req, res) => {
         chatRoomId: chatRooms[ind].chatRoomId,
       };
     });
+
+    if (!uid || uid === "null") {
+      res.cookie("uid", userId, {
+        httpOnly: false,
+        sameSite: "strict",
+        path: "/",
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        secure: false,
+      });
+    }
+
+    if (!uname || uname === "null") {
+      res.cookie("uname", name, {
+        httpOnly: false,
+        sameSite: "strict",
+        path: "/",
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        secure: false,
+      });
+    }
 
     res.status(200).send(friendList);
   } catch (error) {
