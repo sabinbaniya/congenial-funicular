@@ -4,6 +4,7 @@ const logout = async (req, res) => {
   const serializedCookie = cookie.serialize("access", null, {
     httpOnly: true,
     maxAge: -1,
+    sameSite: "none",
     path: "/",
     secure: true,
   });
