@@ -19,7 +19,7 @@ const addFriend = async (req, res) => {
   try {
     const found = await UserModel.findOne({ userId: user });
 
-    const { userId } = jwt.decode(access, process.env.JWT_SECRET);
+    const { userId } = jwt.decode(access);
     const clientUser = await UserModel.findOne({ userId });
 
     if (!found || !clientUser) {
@@ -77,24 +77,6 @@ const addFriend = async (req, res) => {
       { userId: user },
       { $push: { friends: obj2 } }
     );
-
-    /*
-    to-do
-
-    check if a user is trying to friend themselve
-    check if a user is trying to friend an already friended user
-    
-    */
-
-    /* after finding user, take its Userid, create a object with fields {
-            friends: ObjectId,
-            chatRoomId: generate a uuid for their chatroom,
-            messageCollectionId: generate a message collection and insert its id
-        }
-
-        after updating clientUser's friends array do the same with user's friends array
-
-        */
 
     return res.status(200).json({ msg: "Successfully added friend" });
   } catch (error) {

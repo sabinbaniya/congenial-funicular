@@ -12,6 +12,7 @@ const verifyEmail = async (req, res) => {
   try {
     const user = await UserModel.findOne({
       emailVerificationToken: verificationCode,
+      isEmailVerified: false,
     });
 
     if (!user) {

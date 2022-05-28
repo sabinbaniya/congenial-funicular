@@ -82,7 +82,7 @@ userSchema.methods.generateCookie = function () {
     sameSite: "strict",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
-    secure: true,
+    secure: false,
   });
 
   return serializedCookie;

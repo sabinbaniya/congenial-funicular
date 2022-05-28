@@ -12,7 +12,7 @@ router
   .post("/search", body("email").isEmail().normalizeEmail(), search)
   .post(
     "/add",
-    body("user").not().isEmpty().trim().escape().isLength({ min: 2, max: 30 }),
+    body("user").not().isEmpty().trim().escape().isLength({ min: 2, max: 40 }),
     addFriend
   )
   .get("/getAllFriends", getAllFriends)

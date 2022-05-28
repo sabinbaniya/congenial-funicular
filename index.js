@@ -24,6 +24,7 @@ app.use(
   cors({
     origin: URL,
     credentials: true,
+    withCredentials: true,
   })
 );
 
