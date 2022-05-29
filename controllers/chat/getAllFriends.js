@@ -39,6 +39,7 @@ const getAllFriends = async (req, res) => {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
         sameSite: "none",
         secure: true,
+        domain: process.env.URL,
       });
     }
 
@@ -49,6 +50,7 @@ const getAllFriends = async (req, res) => {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
         sameSite: "none",
         secure: true,
+        domain: process.env.URL,
       });
     }
 

@@ -8,6 +8,7 @@ const logout = async (req, res) => {
     path: "/",
     sameSite: "none",
     secure: true,
+    domain: process.env.URL,
   });
 
   res.setHeader("Set-Cookie", serializedCookie);
