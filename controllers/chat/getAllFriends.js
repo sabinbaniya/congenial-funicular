@@ -37,6 +37,8 @@ const getAllFriends = async (req, res) => {
         httpOnly: false,
         path: "/",
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        sameSite: "none",
+        secure: true,
       });
     }
 
@@ -45,6 +47,8 @@ const getAllFriends = async (req, res) => {
         httpOnly: false,
         path: "/",
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        sameSite: "none",
+        secure: true,
       });
     }
 

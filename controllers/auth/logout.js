@@ -6,6 +6,8 @@ const logout = async (req, res) => {
     httpOnly: true,
     maxAge: -1,
     path: "/",
+    sameSite: "none",
+    secure: true,
   });
 
   res.setHeader("Set-Cookie", serializedCookie);

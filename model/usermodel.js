@@ -81,6 +81,8 @@ userSchema.methods.generateCookie = function () {
     httpOnly: true,
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
+    sameSite: "none",
+    secure: true,
   });
 
   return serializedCookie;
