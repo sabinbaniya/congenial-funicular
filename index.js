@@ -18,7 +18,7 @@ const MessageCollectionModel = require("./model/messagecollectionmodel");
 const authChecker = require("./middlewares/authchecker");
 const UserModel = require("./model/usermodel");
 
-const URL = process.env.URL;
+const URL = process.env.SUBDOMAIN_URL;
 
 app.use(
   cors({
