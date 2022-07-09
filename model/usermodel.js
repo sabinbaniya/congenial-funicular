@@ -80,7 +80,7 @@ userSchema.methods.generateCookie = function () {
   const serializedCookie = serialize("access", token, {
     httpOnly: true,
     path: "/",
-    domain: process.env.URL,
+    // domain: process.env.URL,
     maxAge: 60 * 60 * 24 * 30,
     sameSite: "none",
     secure: true,
